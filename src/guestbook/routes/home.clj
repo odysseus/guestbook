@@ -14,7 +14,7 @@
 
 (defn home [& [name message error]]
   (layout/common
-   [:h1 "Guestbook"]
+   [:h1 "Entries"]
    [:em [:p "Welcome to the guestbook"]]
    [:p error]
 
