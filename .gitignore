@@ -11,3 +11,5 @@ pom.xml
 .lein-env
 .nrepl-port
 .idea
+bin
+.settings
