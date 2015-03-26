@@ -2,7 +2,8 @@
   (:require [compojure.core :refer :all]
             [guestbook.views.layout :as layout]
             [hiccup.form :refer :all]
-            [guestbook.models.db :as db]))
+            [guestbook.models.db :as db]
+            [guestbook.helper :as util]))
 
 (defn format-time [timestamp]
   (-> "dd/MM/yyyy"
@@ -36,7 +37,6 @@
              [:br]
              (submit-button "comment"))))
 
-
 (defn save-message [name message]
   (cond
     (and (empty? name) (empty? message))
@@ -49,11 +49,12 @@
     (home name message "Message field has been let blank")
 
     :else
-    (do
-      (db/save-message name message)
-      (home))))
+   (do
+     (db/save-message name message)
+     (home))))
 
 (defroutes home-routes
   (GET "/" [] (home))
-  (POST "/" [name message] (save-message name message)))
+  (POST "/" [name message] (save-message name message))
+  (GET "/request" request (layout/common (for [[k v] request] [:p (str k " :: " v)]))))
 

@@ -13,3 +13,4 @@ pom.xml
 .idea
 bin
 .settings
+.lein-repl-history
