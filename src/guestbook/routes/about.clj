@@ -3,8 +3,9 @@
             [guestbook.views.layout :as layout]))
 
 (defn about []
+  "About"
   (layout/common
-   [:h1 "About"]
+   "About"
    [:em [:p "\"Clojure all the way down.\""]]))
 
 (defroutes about-routes

@@ -5,8 +5,11 @@
             [hiccup.middleware :refer [wrap-base-url]]
             [compojure.handler :as handler]
             [compojure.route :as route]
+            [noir.session :as session]
+            [ring.middleware.session.memory :refer [memory-store]]
             [guestbook.routes.home :refer [home-routes]]
             [guestbook.routes.about :refer [about-routes]]
+            [guestbook.routes.auth :refer [auth-routes]]
             [guestbook.models.db :as db]))
 
 (defn init []
@@ -22,6 +25,10 @@
   (route/not-found "Not Found"))
 
 (def app
-  (-> (routes home-routes about-routes app-routes)
-      (handler/site)
-      (wrap-base-url)))
+  (-> (handler/site
+       (routes auth-routes
+               home-routes
+               about-routes
+               app-routes))
+      (session/wrap-noir-session
+       {:store (memory-store)})))

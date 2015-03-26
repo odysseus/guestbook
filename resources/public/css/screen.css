@@ -8,3 +8,10 @@ h1 {
     text-align: center;
 }
 
+label {
+  margin: 10px;
+}
+
+input {
+  margin: 10px;
+}

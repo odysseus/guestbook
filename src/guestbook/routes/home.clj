@@ -3,7 +3,8 @@
             [guestbook.views.layout :as layout]
             [hiccup.form :refer :all]
             [guestbook.models.db :as db]
-            [guestbook.helper :as util]))
+            [guestbook.helper :as util]
+            [noir.session :as session]))
 
 (defn format-time [timestamp]
   (-> "dd/MM/yyyy"
@@ -20,7 +21,8 @@
 
 (defn home [& [name message error]]
   (layout/common
-    [:h1 "Entries"]
+    "Guestbook"
+    [:h3 "User: " (session/get :user)]
     [:em [:p "Welcome to the guestbook"]]
     [:p error]
 
