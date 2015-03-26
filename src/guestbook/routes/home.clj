@@ -57,4 +57,3 @@
   (GET "/" [] (home))
   (POST "/" [name message] (save-message name message))
   (GET "/request" request (layout/common (for [[k v] request] [:p (str k " :: " v)]))))
-
