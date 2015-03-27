@@ -4,13 +4,20 @@
             [hiccup.form :refer
              [form-to label text-field password-field submit-button]]
             [noir.response :refer [redirect]]
-            [noir.session :as session]))
+            [noir.session :as session]
+            [noir.validation
+             :refer [rule errors? has-value? on-error]]))
+
+(defn format-error [[error]]
+  [:p.error error])
 
 (defn control [field name text]
-  (list (label name text)
-        [:br]
-        (field name)
-        [:br]))
+  (list
+   (on-error name format-error)
+   (label name text)
+   [:br]
+   (field name)
+   [:br]))
 
 (defn registration-page []
   (layout/common
@@ -29,16 +36,34 @@
             (control password-field :pass "Password: ")
             (submit-button "Login"))))
 
+(defn handle-login [id pass]
+  (rule (has-value? id)
+        [:id "Screen name is required"])
+  (rule (= id "foo")
+        [:id "Unkown user"])
+  (rule (has-value? pass)
+        [:pass "Password is required"])
+  (rule (= pass "bar")
+        [:pass "Invalid password"])
+
+  (if (errors? :id :pass)
+    (login-page)
+
+    (do
+      (session/put! :user id)
+      (redirect "/"))))
+
 (defroutes auth-routes
   (GET "/register" [_] (registration-page))
   (POST "/register" [id pass pass1]
         (if (= pass pass1)
           (redirect "/")
           (registration-page)))
+
   (GET "/login" [] (login-page))
   (POST "/login" [id pass]
-        (session/put! :user id)
-        (redirect "/"))
+        (handle-login id pass))
+
   (GET "/logout" []
        (layout/common
         "Logout"
