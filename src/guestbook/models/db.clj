@@ -6,6 +6,7 @@
          :subprotocol "sqlite",
          :subname "db.sq3"})
 
+;; Guestbook
 (defn create-guestbook-table []
   (sql/with-connection
     db
@@ -31,4 +32,38 @@
      :guestbook
      [:name :message :timestamp]
      [name message (new java.util.Date)])))
+
+;; Users
+(defn create-user-table []
+  (sql/with-connection
+    db
+    (sql/create-table
+     :users
+     [:id "varchar(20) PRIMARY KEY"]
+     [:pass "varchar(100)"])))
+
+(defn add-user [user]
+  (sql/with-connection db
+    (sql/insert-record :users user)))
+
+(defn get-user [id]
+  (sql/with-connection db
+    (sql/with-query-results
+      res ["select * from users where id = ?" id]
+      (first res))))
+
+(defn init-db []
+  (do
+    (create-user-table)
+    (create-guestbook-table)))
+
+
+
+
+
+
+
+
+
+
 
